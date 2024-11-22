@@ -1,0 +1,30 @@
+# Import the CSV data
+$csv = Import-Csv -Path "C:\Users\example Tokens.csv"
+
+# Initialize an array to hold each row's JSON object
+$jsonArray = @()
+$rowid = 1
+# Iterate through each row of the CSV
+foreach ($row in $csv) {
+    # Create a JSON object for each row
+    $jsonObject = @{
+        "@contentId" = $rowid++ # Increment the row ID
+        "serialNumber" = $row."serial Number" # The serial number from the CSV
+        "manufacturer" = "Token2" # Hardcoded value of name of the manufacturer
+        "model" = "HardwareToken" # Hardcoded value of model of the token
+        "secretKey" = $row."secret Key" # The secret key from the CSV
+        "timeIntervalInSeconds" = 30 # Hardcoded value of the time interval
+        "hashFunction" = "hmacsha256" # Hardcoded value of the hash function
+    }
+    # Add the JSON object to the array
+    $jsonArray += $jsonObject
+}
+
+# Convert the array to a JSON string and assign it to $Body
+$Body = @{
+    "@context" = "#$delta"
+    "value" = $jsonArray
+} | ConvertTo-Json
+
+# Output the JSON body
+$Body 
